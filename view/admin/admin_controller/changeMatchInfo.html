@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+  <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.2.1/jquery.form.min.js" integrity="sha384-tIwI8+qJdZBtYYCKwRkjxBGQVZS3gGozr3CtI+5JF/oL1JmPEHzCEnIKbDbLTCer" crossorigin="anonymous"></script>
+
+
+  <link href="https://cdn.bootcdn.net/ajax/libs/bootstrap-select/1.13.18/css/bootstrap-select.css" rel="stylesheet">
+  <script src="https://cdn.bootcdn.net/ajax/libs/bootstrap-select/1.13.18/js/bootstrap-select.js"></script>
+
+  <title>Title</title>
+</head>
+<body>
+<div class="alert alert-warning" role="alert">
+  <h4 class="alert-heading">提示</h4>
+  <p>请慎重修改</p>
+  <hr>
+  <p class="mb-0">信息将在修改后即时生效.</p>
+</div>
+<form action="../match.matchController/changeMatchInfo" method="post">
+  <div class="form-group" hidden>
+    <label for="qid">竞赛id</label>
+    <input type="text" class="form-control" id="qid" value="{$match.mid}" name="mid">
+  </div>
+  <div class="form-group" >
+    <label for="formGroupExampleInput">竞赛名称</label>
+    <input type="text" class="form-control" id="formGroupExampleInput" value="{$match.match_name}" name="match_name">
+  </div>
+  <div class="form-group">
+    <label for="formGroupExampleInput2">竞赛简介</label>
+    <textarea type="text" class="form-control" id="formGroupExampleInput2" style="height: auto" name="match_description">{$match.match_description}</textarea>
+  </div>
+  <div class="form-group">
+    <label for="data_range">开始时间</label>
+    <input type="datetime-local" class="form-control" id="data_range" value="{$match.start_time}" name="start_time">
+  </div>
+  <div class="form-group">
+<!--  题目选择-->
+    <label class="col-form-label col-sm-2" for="selectpicker">题目选择</label>
+
+    <select class="selectpicker" multiple data-selected-text-format="count>10" id="selectpicker" multiple data-live-search="true" style="width: 100%" name="question_choice[]">
+      <optgroup label="简单">
+        {foreach $easyQuestionList as $key => $question}
+        <option value="{$question.qid}">{$question.question_name}</option>
+        {/foreach}
+      </optgroup>
+      <optgroup label="中等">
+        {foreach $meddleQuestionList as $key => $question}
+        <option value="{$question.qid}">{$question.question_name}</option>
+        {/foreach}
+      </optgroup>
+      <optgroup label="困难">
+        {foreach $hardQuestionList as $key => $question}
+        <option value="{$question.qid}">{$question.question_name}</option>
+        {/foreach}
+      </optgroup>
+    </select>
+
+  </div>
+  <div class="form-group">
+    <label for="time_limit">比赛形式说明</label>
+    <textarea type="text" class="form-control" id="time_limit"  name="match_type">{$match.match_type}</textarea>
+  </div>
+  <div class="form-group">
+    <label for="time_limit">持续事件 (分钟)</label>
+    <input type="number" class="form-control" id="persistent_time" value="{$match.persistent_time}" name="persistent_time">
+  </div>
+  预览
+  <img src="" class="img">
+
+  <div class="form-group">
+    <label for="url">封面 url</label>
+    <input type="url" class="form-control" id="url" value="{$match.img_url}" name="img_url">
+  </div>
+
+  <div class="form-group" align="center">
+    <input type="submit" value="修 改" class="btn btn-primary" id="submit">
+  </div>
+</form>
+
+{foreach $questionIds as $key => $questionId}
+  <div class="qid" hidden>{$questionId.qid}</div>
+{/foreach}
+
+<script>
+  $(".img").attr("src",$("#url").val())
+
+<!--  给竞赛选择好的题目吃实话-->
+  $(".qid").each(function () {
+    find = "option[value='"+$(this).text()+"']"
+    $(".selectpicker").find(find).attr("selected",true)
+  })
+
+
+
+  $("#submit").click(function () {
+    alert("修改成功!")
+  })
+</script>
+</body>
+</html>

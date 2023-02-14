@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <!-- 必须的 meta 标签 -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap 的 CSS 文件 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+  <!--    https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css-->
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+  <title>Hello, world!</title>
+</head>
+<body>
+<div class="container-lg">
+
+  <table class="table" >
+    <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">题目</th>
+      <th scope="col">难度</th>
+      <th scope="col">管理</th>
+    </tr>
+    </thead>
+    <tbody>
+    {assign name="index" value="0" /}
+
+    {foreach $questionList as $key=>$question}
+    <tr class="question">
+      <th scope="row">{$index+=1}</th>
+
+      <?php $href = "../editor?qid=" . $question->qid; ?>
+      <td><a href={$href}>{$question.question_name}</a></td>
+      <td>
+        {switch $question.difficulty}
+        {case 0}<span class="badge badge-success">简单</span>{/case}
+        {case 1}<span class="badge badge-warning">中等</span>{/case}
+        {case 2}<span class="badge badge-danger">困难</span>{/case}
+        {/switch}
+      </td>
+      <td>
+        <div class="qid" hidden >{$question.qid}</div>
+        <button type="button" class="btn btn-primary manage">管理</button>
+        <button type="button" class="btn btn-danger delete">删除</button>
+      </td>
+    </tr>
+    {/foreach}
+    </tbody>
+
+  </table>
+  <nav aria-label="Page navigation example">
+    <ul class="pagination">
+      <li class="page-item">
+        <a class="page-link" href="#" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+      {for start="1" end="$count / 15 + 1"}
+      <?php $pagehref = "../admin.adminController/getQuestions?page=" . $i; ?>
+      <li class="page-item"><a class="page-link" href="{$pagehref}">{$i}</a></li>
+      {/for}
+      <li class="page-item">
+        <a class="page-link" href="#" aria-label="Next">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</div>
+
+</body>
+<script>
+
+  $(".delete").click(function () {
+    qid = $(this).prev().prev().text()
+
+    $.post(
+          "../admin.adminController/deleteQuestion",
+          {
+            "qid": qid,
+          },
+          function (data,status) {
+            alert(status)
+            window.location = "../admin.adminController/getQuestions?page=1"
+          }
+    )
+  })
+
+  $(".manage").click(function () {
+    qid = $(this).prev().text()
+    window.location = "../admin.adminController/toChangeQuestion?qid="+qid
+  })
+
+
+</script>
+
+</html>

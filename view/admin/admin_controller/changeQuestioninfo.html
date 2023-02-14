@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap 的 CSS 文件 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+
+    <title>Title</title>
+</head>
+<body>
+<div class="alert alert-warning" role="alert">
+    <h4 class="alert-heading">提示</h4>
+    <p>这里只提供修改基本信息，测试样例请删除后重新提交</p>
+    <hr>
+    <p class="mb-0">信息将在修改后即时生效.</p>
+</div>
+<form action="../question.QuestionController/changeQuestion" method="post">
+    <div class="form-group" hidden>
+        <label for="qid">题目id</label>
+        <input type="text" class="form-control" id="qid" value="{$question.qid}" name="qid">
+    </div>
+    <div class="form-group" >
+        <label for="formGroupExampleInput">题目名称</label>
+        <input type="text" class="form-control" id="formGroupExampleInput" value="{$question.question_name}" name="question_name">
+    </div>
+    <div class="form-group">
+        <label for="formGroupExampleInput2">题目简介</label>
+        <textarea type="text" class="form-control" id="formGroupExampleInput2" style="height: auto" name="description">{$question.description}</textarea>
+    </div>
+    <div class="form-group">
+        <label for="input_style">输入形式</label>
+        <textarea type="text" class="form-control" id="input_style" style="height: auto" name="input_style">{$question.input_style}</textarea>
+    </div>
+    <div class="form-group">
+        <label for="output_style">输出形式</label>
+        <textarea type="text" class="form-control" id="output_style" style="height: auto" name="output_style">{$question.output_style}</textarea>
+    </div>
+    <div class="form-group">
+        <label for="data_range">数据范围</label>
+        <input type="text" class="form-control" id="data_range" value="{$question.data_range}" name="data_range">
+    </div>
+    <div class="form-group">
+        <label for="difficulty">难度选择</label>
+        <div hidden class="difficulty_data">{$question.difficulty}</div>
+        <select id="difficulty" class="form-select form-select-lg mb-3 choice_language" aria-label=".form-select-lg example" style="float: right;height: 30px;width: 200px" name="difficulty">
+            <option value="0" id="easy" >简单</option>
+            <option value="1" id="meddle">中等</option>
+            <option value="2" id="hard">困难</option>
+        </select>
+    </div>
+    <div class="form-group" style="float: left">
+        <label for="time_limit">时间限制(ms)</label>
+        <input type="number" class="form-control" id="time_limit" value="{$question.time_limit}" style="width: 90%" name="time_limit">
+    </div>
+    <div class="form-group" style="float: left">
+        <label for="time_limit">space_limit(kb)</label>
+        <input type="number" class="form-control" id="space_limit" value="{$question.space_limit}" style="width: 90%" name="space_limit">
+    </div>
+    <div style="clear:both"></div>
+    <div class="form-group">
+        <label for="resource">来源</label>
+        <input type="text" class="form-control" id="resource" value="{$question.resource}" name="resource">
+    </div>
+    <div class="form-group">
+        <label for="tag">标签 (数组形式)</label>
+        <input type="text" class="form-control" id="tag" value="{$question.tag}" name="tag">
+    </div>
+    <div class="form-group" align="center">
+        <input type="submit" value="修 改" class="btn btn-primary" id="submit">
+    </div>
+</form>
+<script>
+    difficulty = $(".difficulty_data").text();
+
+    //难度初始化
+    switch (difficulty) {
+        case "0":
+            $("#easy").attr("selected",true)
+            break
+        case "1":
+            $("#meddle").attr("selected",true)
+            break
+        case "2":
+            $("#hard").attr("selected",true)
+            break
+    }
+
+    $("#submit").click(function () {
+        alert("修改成功!")
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+</head>
+<body>
+<!--代行蓝-->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">导航栏</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active menu">
+                <a class="nav-link" >首页 </a>
+            </li>
+            <li class="nav-item person_center">
+                <a class="nav-link" >个人中心</a>
+            </li>
+            <li class="nav-item about">
+                <a class="nav-link " >关于</a>
+            </li>
+        </ul>
+<!--        搜索框-->
+        <form class="form-inline my-2 my-lg-0">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+    </div>
+</nav>
+
+
+<div class="menu_body">
+    <h1>首页</h1>
+</div>
+
+<div class="person_body" hidden>
+    <h1>个人中心</h1>
+</div>
+
+<div class="about_body" hidden>
+    <h1>关于</h1>
+</div>
+<script>
+<!--首页按钮按下后-->
+    $(".menu").click(function () {
+
+        // 隐藏别的窗口
+        $(".person_body").attr("hidden",true)
+        $(".about_body").attr("hidden",true)
+        //按钮样式显示激活
+        $(".menu").addClass("active")
+        $(".menu_body").attr("hidden",false)
+        //移除其他按钮样式
+        $(".person_center").removeClass("active")
+        $(".about").removeClass("active")
+    })
+
+<!--个人中心按钮按下后-->
+    $(".person_center").click(function () {
+        // 隐藏别的窗口
+        $(".person_body").attr("hidden",true)
+        $(".menu_body").attr("hidden",true)
+        //按钮样式显示激活
+        $(".person_center").addClass("active")
+        $(".person_body").attr("hidden",false)
+        //移除其他按钮样式
+        $(".menu").removeClass("active")
+        $(".about").removeClass("active")
+    })
+
+<!--关于按钮按下后-->
+    $(".about").click(function () {
+        // 隐藏别的窗口
+        $(".menu_body").attr("hidden",true)
+        $(".person_body").attr("hidden",true)
+        //按钮样式显示激活
+        $(".about").addClass("active")
+        $(".about_body").attr("hidden",false)
+        //移除其他按钮样式
+        $(".menu").removeClass("active")
+        $(".about").removeClass("active")
+    })
+</script>
+</body>
+</html>

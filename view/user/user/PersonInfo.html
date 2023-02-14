@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script src="https://cdn.staticfile.org/echarts/4.3.0/echarts.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="https://cdn.staticfile.org/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+
+
+
+    <script src="http://cdn.bootcss.com/ace/1.2.4/ace.js"></script>
+    <script src="http://cdn.bootcss.com/ace/1.2.4/ext-language_tools.js"></script>
+    <script src="http://cdn.bootcss.com/ace/1.2.4/ext-old_ie.js"></script>
+    <script src="http://cdn.bootcss.com/ace/1.2.4/theme-monokai.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <!-- 引入 echarts.js -->
+    <title>Hello, world!</title>
+    <style>
+        .info{
+            height: 200px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body style="background-color: #f7f8fa">
+<div class="container-lg" >
+
+    <div class="card" >
+        <div class="card-body" style="height: 1300px">
+            <div class="info_head">
+                <img style="float: left" src="{$userInfo.url}" alt="..." class="border border-warning">
+                <div style="margin-left: 10px;float: left;">
+                    <h5 class="display-4">{$userInfo.user_name}</h5>
+                    <footer class="blockquote-footer">{$userInfo.user_email}</footer>
+                    <br>
+                    <p>全站排名 : {$userInfo.rank}</p>
+
+                </div>
+            </div>
+            <div style="clear:both"></div>
+<!--            左侧个人信息-->
+            <div class="shadow" style="width: 30%;height:1000px;float:left;padding: 10px;background-color: #f7f8fa;border-radius: 15px;margin-top: 10px">
+                <button style="display:block;margin:0 auto;margin-bottom: 10px;width: 90%" type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#personInfo">修改个人信息</button>
+<!--                个人信息模态框-->
+                <div class="modal fade" id="personInfo" >
+                    <div class="modal-dialog"  >
+                        <div class="modal-content" style="width: 500px;height: auto">
+
+                            <!-- 模态框头部 -->
+                            <div class="modal-header">
+                                <h4 class="modal-title">修改</h4>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+
+                            <!-- 模态框主体 -->
+                            <div class="modal-body" >
+                                <div class="card" >
+                                    <div class="card-body pre-scrollable" style="height: 700px">
+                                        <form action="../user.userController/changeInfo" method="post">
+                                            <div class="form-group" hidden>
+                                                <label for="id" style="margin-right: 20px">id</label>
+                                                <input type="text" id="id" class="form-control" value="{$userInfo.uid}" name="uid">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="img" style="margin-right: 20px">头像预览</label>
+                                                <img src="" width="200" height="200" id="img" class="border border-warning">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="url" style="margin-right: 20px">图片URL</label>
+                                                <input type="url" id="url" class="form-control" value="{$userInfo.url}" name="url">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="user_name">用户名:</label>
+                                                <input type="text" class="form-control" id="user_name" placeholder="Example input" value="{$userInfo.user_name}" name="user_name">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="gender">性别:</label>
+                                                <input type="text" class="form-control" id="gender" placeholder="Example input" value="{$userInfo.gender}" name="gender">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="user_email">邮箱:</label>
+                                                <input type="email" class="form-control" id="user_email" placeholder="Another input" value="{$userInfo.user_email}" name="user_email">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="user_password">密码:</label>
+                                                <input type="password" class="form-control" id="user_password" placeholder="Another input" value="{$userInfo.user_password}" name="user_password">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="tag">个人标签(使用逗号分割):</label>
+                                                <input type="text" class="form-control" id="tag" placeholder="Another input" value="{foreach $userInfo.tag as $key => $tag}{$tag},{/foreach}" name="tag">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="location">国家/地区</label>
+                                                <input type="text" class="form-control" id="location" placeholder="Another input" value="{$userInfo.location}" name="location">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="school">学校:</label>
+                                                <input type="text" class="form-control" id="school" placeholder="Another input" value="{$userInfo.school}" name="school">
+                                            </div>
+<!--                                            标签-->
+                                            <div class="form-group">
+                                                <button type="submit" class="btn btn-primary" >修改</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 模态框底部 -->
+                            <div class="modal-footer">
+
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <h4>个人简介</h4><br>
+                <div style="margin-bottom: 6px"><i class="bi bi-geo-alt">  &nbsp;&nbsp;{$userInfo.location}</i></div>
+                <div style="margin-bottom: 6px"><i class="bi bi-gender-trans">  &nbsp;&nbsp;{$userInfo.gender}</i></div>
+                <div style="margin-bottom: 6px"><i class="bi bi-book">  &nbsp;&nbsp;{$userInfo.school}</i></div>
+                <div style="margin-bottom: 6px">
+                    <i class="bi bi-tags">
+                        &nbsp;&nbsp;
+
+                        {foreach $userInfo.tag as $key => $tag}
+                        <span class="badge badge-pill badge-dark">{$tag}</span>
+                        {/foreach}
+                    </i>
+                </div>
+                <br>
+                <hr>
+                <h4>个人勋章</h4>
+                <table class="table table-borderless">
+                    <tbody>
+                    {assign name="count" value="0" /}
+                    {php}
+                        $totalLen = count($badges) / 3 + 1;
+                        $rowLen = count($badges);
+                    {/php}
+                    {for start="0" end="$totalLen"}
+                        <tr>
+                            {for start="0" end="$rowLen"}
+                            <td align="center">
+                                <img  style="" width="60" height="60" src="{$badges[$count]->badge_url}"><br>
+                                <span style="font-size: 6px;">{$badges[$count++]->badge_name}</span>
+                            </td>
+                            {/for}
+                        </tr>
+                    {/for}
+                    </tbody>
+                </table>
+                <hr>
+            </div>
+<!--右侧信息-->
+            <div class="shadow" style="width: 68%;height:1000px;float:left;margin-left:10px;padding:10px;border-radius: 15px;margin-top: 10px;background-color: #f7f8fa;">
+                <div class="card info" style="height: 250px">
+                    <div class="card-body info">
+<!--                        等级变化-->
+                        <div id="main" style="width: 100%;height:250px;"></div>
+                    </div>
+                </div>
+                <div class="card info" style="height: 230px">
+                    <div class="card-body ">
+<!--                        解题分析-->
+                        <div id="question_resolve" style="width: 50%;height:220px;float: left"></div>
+                        <div style="width: 40%;float: right;">
+
+                            <div class="progress" style="margin-top: 40px">
+
+                                <div class="progress-bar bg-success easy_pro" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                    {php}$easy_percent = $easy_count == 0 ? 0 : number_format($userInfo->easy_resolve / $easy_count * 100,'2');{/php}
+                                    {$easy_percent}%
+                                </div>
+                            </div>
+                            <div class="progress" style="margin-top: 20px">
+                                <div class="progress-bar bg-warning meddle_pro" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                    {php}$meddle_percent = $meddle_count == 0 ? 0 : number_format($userInfo->meddle_resolve / $meddle_count * 100,'2');{/php}
+                                    {$meddle_percent}%
+                                </div>
+                            </div>
+                            <div class="progress" style="margin-top: 20px">
+                                <div class="progress-bar bg-danger hard_pro" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                    {php}$hard_percent = $hard_count == 0? 0:number_format($userInfo->hard_resolve / $hard_count * 100,'2');{/php}
+                                    {$hard_percent}%
+                                </div>
+                            </div>
+                        </div>
+                        <div style="width: 6%;float: right;">
+                            <div style="margin-top: 35px">
+                                简单
+                            </div>
+                            <div style="margin-top: 15px">
+                                中等
+                            </div>
+                            <div style="margin-top: 15px">
+                                困难
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="card text-center">
+                    <div class="card-header">
+                        <ul class="nav nav-tabs card-header-tabs">
+                            <li class="nav-item">
+                                <a class="nav-link active" href="#">最近提交</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">题解</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body">
+                        <div class="recent_submit">
+
+                            <table class="table table-striped">
+                                <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">题目</th>
+                                    <th scope="col">状态</th>
+                                    <th scope="col">操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {php} $recordLen = count($records); {/php}
+                                {for start="0" end="$recordLen" step="1"}
+                                    <!-- 模态框 -->
+                                    {php}$modalIndex = "myModal" . $i;{/php}
+                                    <div class="modal fade" id="{$modalIndex}" >
+                                        <div class="modal-dialog"  >
+                                            <div class="modal-content" style="width: 800px;height: auto">
+
+                                                <!-- 模态框头部 -->
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title">{$records[$i]->question_name} 提交记录</h4>
+                                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                </div>
+
+                                                <!-- 模态框主体 -->
+                                                <div class="modal-body">
+                                                    <div class="card">
+                                                        <div class="card-body">
+<!--                                                            卡片左侧-->
+                                                            <div style="float: left">
+                                                                执行用时 : <span class="font-weight-bold">{$records[$i]->time / 1000} m </span><br>
+                                                                {php}$formatSpace = number_format($records[$i]->space / 1024,2); {/php}
+                                                                内存消耗 : <span class="font-weight-bold">{$formatSpace} Mb</span> <br>
+                                                                提交时间 : <span class="font-weight-bold">{$records[$i]->submit_time} </span>
+                                                            </div>
+                                                            <div style="float: right">
+                                                                <div>状态
+                                                                    {if($records[$i]->state)}
+                                                                        <h3 style="color: green">通过</h3>
+                                                                    {else /}
+                                                                        <h3 style="color: red">未通过</h3>
+                                                                    {/if}
+                                                                </div>
+                                                            </div>
+                                                            <div style="clear:both"></div>
+                                                            <div class="card border-success mb-3" style="width: 100%;height: auto">
+                                                                <div class="card-header bg-transparent border-success">language : {$records[$i]->language}</div>
+                                                                <div class="card-body text-success">
+                                                                    {php}$editorId = "editor" . $i;{/php}
+                                                                    <div class="card-body" id="{$editorId}" style="width: 100%;height: 500px;font-size: 20px">
+                                                                        {$records[$i]->code}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="card-footer bg-transparent border-success">inputOutput : {$records[$i]->inputOutput}</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- 模态框底部 -->
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <tr>
+                                        <th scope="row">{$i+1}</th>
+                                        <td>{$records[$i]->question_name}</td>
+                                        <td><a class="{$records[$i]->state ? 'badge badge-success' : 'badge badge-danger'}">{$records[$i]->state ? '通过' : '未通过'}</a></td>
+                                        <td>
+                                            <div class="rid" >{$records[$i]->rid}</div>
+                                            <button type="button" class="btn btn-link moreinfo" data-toggle="modal" data-target="#{$modalIndex}">
+                                                更多信息
+                                            </button>
+                                        </td>
+                                    </tr>
+                                {/for}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+
+        </div>
+
+    </div>
+
+</div>
+<span id="easy_resolve" hidden>{$userInfo.easy_resolve}</span>
+<span id="meddle_resolve" hidden>{$userInfo.meddle_resolve}</span>
+<span id="hard_resolve" hidden>{$userInfo.hard_resolve}</span>
+<span id="easy_count" hidden>{$easy_count}</span>
+<span id="meddle_count" hidden>{$meddle_count}</span>
+<span id="hard_count" hidden>{$hard_count}</span>
+<span id="recordLen" hidden>{$recordLen}</span>
+<script>
+
+
+
+
+</script>
+<script type="text/javascript">
+
+    $("#img").attr("src",$("#url").val())
+
+    $("#url").change(function () {
+        $("#img").attr("src",$("#url").val())
+    })
+
+    if($("#recordLen").text() !== "0" && $("#recordLen").text() !== 0){
+        require('ace/ext/old_ie')
+        ace.require("ace/ext/language_tools")
+
+        for(var i = 0;i < 5;i++){
+            if($(("#editor" + i)).length > 0){
+                var editor = ace.edit(("editor" + i));
+                editor.setTheme("ace/theme/monokai");
+                editor.$blockScrolling = Infinity;
+                editor.session.setMode("ace/mode/c_cpp");
+            }
+        }
+
+    }
+
+
+
+
+
+    var myChart = echarts.init(document.getElementById('main'));
+    hard_resolve = $("#hard_resolve").text()
+
+    meeddle_resolve = $("#meddle_resolve").text()
+    easy_resolve = $("#easy_resolve").text()
+
+    $easy_count = $("#easy_count").text()
+    $meddle_count = $("#meddle_count").text()
+    $hard_count = $("#hard_count").text()
+
+    easy_pro = (easy_resolve / $easy_count * 100).toFixed(2)
+    meddle_pro = (meeddle_resolve / $meddle_count * 100).toFixed(2)
+    hard_pro = (hard_resolve / $hard_count * 100).toFixed(2)
+
+    $(".easy_pro").css('width',(easy_pro) + '%')
+    $(".meddle_pro").css('width',(meddle_pro) + '%')
+    $(".hard_pro").css('width',(hard_pro) + '%')
+    // 指定图表的配置项和数据
+    var option = {
+        grid: {borderWidth:'0'},
+        title: {
+            text: '全站排名'
+        },
+        tooltip: {}
+        ,
+        xAxis: {
+            data: ["2023年1月","2023年2月","2023年3月"],
+            splitLine:{
+                show:false
+            },
+            axisLine:{
+                show:false,
+
+            },
+            axisTick: {		//x轴刻度线
+                show:false
+            },
+
+        },
+        lineStyle: {
+            color: "#F29C1B",
+            normal:{
+                color:"#FFFFFF"
+            }
+        },
+        yAxis: {
+            inverse:true,
+
+            splitLine:{
+                show:false
+            }
+        },
+        series: [{
+            name: '排名',
+            type: 'line',
+            data: [5, 20, 1],
+
+            symbolSize:10
+        }]
+    };
+
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+
+    var myChart = echarts.init(document.getElementById('question_resolve'));
+
+    myChart.setOption({
+        title: {
+            text: '解题数量'
+        },
+        color:["#FF5733","#FFC300",'#58D68D'],
+        series : [
+            {
+                name: '解题数量统计',
+                type: 'pie',    // 设置图表类型为饼图
+                radius: '55%',  // 饼图的半径，外半径为可视区尺寸（容器高宽中较小一项）的 55% 长度。
+                data:[          // 数据数组，name 为数据项名称，value 为数据项值
+                    {value:hard_resolve, name:'困难'},
+                    {value:meeddle_resolve, name:'中等'},
+                    {value:easy_resolve, name:'简单'},
+                ],
+
+
+            }
+        ]
+    })
+
+    $(".moreinfo").click(function () {
+
+    })
+</script>
+</body>
+
+</html>

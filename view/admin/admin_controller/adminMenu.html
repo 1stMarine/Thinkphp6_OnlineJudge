@@ -1,0 +1,201 @@
+
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <!-- 必须的 meta 标签 -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+  <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.2.1/jquery.form.min.js" integrity="sha384-tIwI8+qJdZBtYYCKwRkjxBGQVZS3gGozr3CtI+5JF/oL1JmPEHzCEnIKbDbLTCer" crossorigin="anonymous"></script>
+
+
+  <link href="https://cdn.bootcdn.net/ajax/libs/bootstrap-select/1.13.18/css/bootstrap-select.css" rel="stylesheet">
+  <script src="https://cdn.bootcdn.net/ajax/libs/bootstrap-select/1.13.18/js/bootstrap-select.js"></script>
+
+  <title>admin</title>
+</head>
+<body style="background-color: #f5f6f9">
+
+<div class="container-lg" style="background-color: white;padding:20px">
+  <div class="row">
+    <div class="col-3">
+      <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+        <button class="nav-link add_question active" id="v-pills-home-tab" data-toggle="pill" data-target="#v-pills-home" type="button" role="tab" aria-controls="v-pills-home" aria-selected="true">新增题目</button>
+        <button class="nav-link admin_question" id="v-pills-profile-tab" data-toggle="pill" data-target="#v-pills-profile" type="button" role="tab" aria-controls="v-pills-profile" aria-selected="false">管理题目</button>
+        <button class="nav-link add_match" id="v-pills-messages-tab" data-toggle="pill" data-target="#v-pills-messages" type="button" role="tab" aria-controls="v-pills-messages" aria-selected="false">新增比赛</button>
+        <button class="nav-link admin_match" id="v-pills-settings-tab" data-toggle="pill" data-target="#v-pills-settings" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false">管理比赛</button>
+      </div>
+    </div>
+    <div class="col-9">
+      <div class="tab-content" id="v-pills-tabContent">
+<!--        新增题目-->
+        <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
+          <div class="alert alert-success" role="alert">
+            <h4 class="alert-heading">警告!</h4>
+            <p>这是一个管理员操作，目的为平台添加一个题目！</p>
+            <hr>
+            <p class="mb-0">.xml文件上传后，后台会自动解析.</p>
+          </div>
+          <form id="uploadQuestionForm" action="../common.XmlOperator/index" method="post" enctype="multipart/form-data" target="frameName">
+            <div class="input-group mb-3">
+              <div class="custom-file">
+                <input type="file" class="custom-file-input question_file" id="inputGroupFile02" accept="application/xml" name="question_file">
+                <label class="custom-file-label question_file_name" for="inputGroupFile02" aria-describedby="inputGroupFileAddon02">选择题目文件(.xml)</label>
+              </div>
+              <div class="input-group-append">
+                <input type="submit" class="input-group-text upload_question" id="inputGroupFileAddon02"></input>
+              </div>
+            </div>
+          </form>
+          <iframe src="" frameborder="0" name="frameName"></iframe>
+          <!--              文件选择提示框-->
+
+          <div class="alert alert-success alert-dismissible fade show" role="alert" hidden>
+            <strong>上传成功!</strong>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+
+        </div>
+<!--        题目管理-->
+        <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+          <iframe class="if_body" src="../admin.adminController/getQuestions?page=1" frameborder="0" style="width: 100%;height:1600px"></iframe>
+        </div>
+<!--        新增竞赛-->
+        <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">
+          <form action="../match.MatchController/addMatchWithForm" method="post">
+            <div class="form-group" >
+              <label for="formGroupExampleInput">竞赛名</label>
+              <input type="text" class="form-control" id="formGroupExampleInput" name="match_name">
+            </div>
+            <div class="form-group">
+              <label for="formGroupExampleInput2">竞赛简介 (150字以内)</label>
+              <textarea type="text" class="form-control" id="formGroupExampleInput2" style="height: auto" name="match_description"></textarea>
+            </div>
+            <div class="form-group">
+              <label class="col-form-label col-sm-2" for="selectpicker">题目选择</label>
+
+              <select class="selectpicker" multiple data-selected-text-format="count>10" id="selectpicker" multiple data-live-search="true" style="width: 100%" name="question_choice[]">
+                <optgroup label="简单">
+                  {foreach $easyQuestionList as $key => $question}
+                  <option value="{$question.qid}">{$question.question_name}</option>
+                  {/foreach}
+                </optgroup>
+                <optgroup label="中等">
+                  {foreach $meddleQuestionList as $key => $question}
+                  <option value="{$question.qid}">{$question.question_name}</option>
+                  {/foreach}
+                </optgroup>
+                <optgroup label="困难">
+                  {foreach $hardQuestionList as $key => $question}
+                  <option value="{$question.qid}">{$question.question_name}</option>
+                  {/foreach}
+                </optgroup>
+              </select>
+
+            </div>
+
+            <div class="form-group">
+              <label for="input_style">开始时间</label>
+              <input type="datetime-local" class="form-control" id="input_style" style="height: auto" name="start_time"></input>
+            </div>
+            <div class="form-group">
+              <label for="output_style">持续时间 (分)</label>
+              <input type="number" class="form-control" id="output_style" style="height: auto" name="persistent_time"></input>
+            </div>
+            <div class="form-group">
+              <label for="data_range">比赛形式说明 (AMC or Normal)</label>
+              <textarea type="text" class="form-control" id="data_range"  name="match_type"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="resource">封面 url</label>
+              <input type="url" class="form-control" id="resource" value="" name="img_url">
+            </div>
+            <div class="form-group" align="center">
+              <button type="submit" value="创 建" class="btn btn-primary submit" id="submit">
+                <span class="spinner-grow spinner-grow-sm loading_circle" role="status" aria-hidden="true" hidden></span>
+                <span class="btn_text">提 &nbsp;&nbsp;交</span>
+              </button>
+            </div>
+          </form>
+        </div>
+<!--        管理竞赛-->
+        <div class="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">
+          <iframe class="if_body" src="../admin.adminController/getMatch?page=1" frameborder="0" style="width: 100%;height:1600px"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<script type="text/javascript">
+  $('#selectpicker').selectpicker({width: 'calc(100% - 95px)'});
+  // $(".alert-dismissible").alert('close')
+
+  $(".add_question").click(function () {
+    $('.add_question').tab('show') // Select tab by name
+  })
+  $(".admin_question").click(function () {
+    $('.admin_question').tab('show') // Select first tab
+  })
+  $(".add_match").click(function () {
+    $('.add_match').tab('show') // Select last tab
+  })
+  $(".admin_match").click(function () {
+    $('.admin_match').tab('show') // Select third tab
+  })
+
+  $(".submit").click(function () {
+    $(".btn_text").text("提交中")
+    $(".submit_code").attr("disabled",true)
+    $(".loading_circle").attr("hidden",false)
+  })
+
+  // $(".upload_question").click(function () {
+  //   alert("发送")
+  //   $(".alert-dismissible").attr('hidden', false)
+  //   let formDateObj = new FormData();
+  //   file = $(".question_file")
+  //   formDateObj.append('file', file)
+  //   $.ajax({
+  //     url: "../common.XmlOperator/index",
+  //     type: 'post',
+  //     data: formDateObj,  //直接将对象放在data后面
+  //     //ajax发送文件必须要指定两个参数
+  //     enctype:'multipart/form-data',
+  //     contentType: false,  //不要使用任何编码，django后端能够自动识别formdata对象
+  //     processData: false,  //告诉浏览器不要对你的数据进行任何处理
+  //     success: function (args) {
+  //       alert(args)
+  //     }
+  //   })
+  // })
+
+
+
+  function getFileName(o){
+    var pos=o.lastIndexOf("\\");
+    return o.substring(pos+1);
+  }
+
+</script>
+<!-- 选项 2：Popper 和 Bootstrap 的 JS 插件各自独立 -->
+<!--
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js" integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+" crossorigin="anonymous"></script>
+-->
+</body>
+
+
+</html>

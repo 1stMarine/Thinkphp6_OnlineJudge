@@ -1,0 +1,162 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html lang="zh-CN">
+<head>
+    <!-- 必须的 meta 标签 -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="shortcut icon" href="/static/59118.ico">
+    <!-- Bootstrap 的 CSS 文件 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <!--    https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css-->
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="https://cdn.staticfile.org/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+    <script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <title>CodeSky</title>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <a class="navbar-brand" href="#"><h3>CodeSky</h3></a>
+
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+            <li class="nav-item questionList active">
+                <a class="nav-link" href="#">题库 <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item matchList">
+                <a class="nav-link" href="#">竞赛</a>
+            </li>
+            <li class="nav-item center">
+                <a class="nav-link">个人空间</a>
+            </li>
+
+            <li class="nav-item admin" hidden="true">
+                <a class="nav-link">管理面板</a>
+            </li>
+        </ul>
+        <div class="dropdown">
+            <div class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
+                <div style="float: right">
+                    <img id="user_url" class="border border-warning" src="https://tse4-mm.cn.bing.net/th/id/OIP-C.adLtVT7WjGjvPUdw7CwpkAAAAA?w=188&h=188&c=7&r=0&o=5&pid=1.7" alt="" width="50" height="50">
+                </div>
+                <h5 id="userName" style="margin-right: 20px;float: right;height:40px;line-height: 40px;color: white">未登录</h5>
+            </div>
+            <div class="dropdown-menu" style="margin-top: 10px">
+                <a class="dropdown-item personInfo">个人空间</a>
+                <a class="dropdown-item logout" >注销</a>
+            </div>
+        </div>
+<!--        <form class="form-inline my-2 my-lg-0">-->
+<!--            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">-->
+<!--            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>-->
+<!--        </form>-->
+    </div>
+</nav>
+
+
+
+<iframe class="if_body" src="" frameborder="0" style="width: 100%;height:100%"></iframe>
+
+
+<script>
+    $(".personInfo").click(function () {
+        if($.cookie('isLogin') == "true"){
+            $(".if_body",parent.document.body).attr("src","../user.user/PersonInfo?uid=" + $.cookie('uid'))
+        }else{
+            $(".if_body",parent.document.body).attr("src","../user.user/login")
+        }
+    })
+
+    $(".logout").click(function () {
+        if($.cookie('isLogin') == "true"){
+            // 全页面刷新
+            top.location.reload()
+            $.cookie('isAdmin',false,{path:'/'})
+
+            $.cookie('isLogin',false,{path:'/'})
+            $.cookie('user_name',"未登录",{path:'/'})
+
+            $.cookie('user_img_url',"https://tse4-mm.cn.bing.net/th/id/OIP-C.adLtVT7WjGjvPUdw7CwpkAAAAA?w=188&h=188&c=7&r=0&o=5&pid=1.7",{path:'/'})
+            $.cookie('uid',null,{path:'/'})
+            $.cookie('user_email',null,{path:'/'})
+        }else{
+            alert("请先登录 !")
+        }
+
+    })
+
+    if($.cookie("isLogin")){
+        $(".if_body",parent.document.body).attr("src","../question.QuestionController/getQuestionList?page=1&uid="+$.cookie("uid"))
+        $("#userName").text($.cookie('user_name'))
+        $("#user_url").attr("src",decodeURI($.cookie('user_img_url')))
+    }else{
+        $("#user_url").attr("src","https://tse4-mm.cn.bing.net/th/id/OIP-C.adLtVT7WjGjvPUdw7CwpkAAAAA?w=188&h=188&c=7&r=0&o=5&pid=1.7")
+        $(".if_body",parent.document.body).attr("src","/question.QuestionController/getQuestionList?page=1")
+    }
+
+    if($.cookie("isAdmin") == "true"){
+        $(".admin").attr("hidden",false)
+    }
+
+    $(".questionList").click(function () {
+        $(".matchList").removeClass("active")
+        $(".center").removeClass("active")
+        $(".admin").removeClass("active")
+        $(this).addClass("active")
+        url = "../question.QuestionController/getQuestionList?page=1"
+        if($.cookie('isLogin') === "true"){
+
+            url += "&uid=" + $.cookie("uid")
+        }
+        $(".if_body",parent.document.body).attr("src",url)
+    })
+    $(".matchList").click(function () {
+        $(".questionList").removeClass("active")
+        $(".center").removeClass("active")
+        $(".admin").removeClass("active")
+        $(this).addClass("active")
+        // 登录判断
+        if($.cookie('isLogin') == undefined || $.cookie('isLogin') == "false"){
+            $(".if_body",parent.document.body).attr("src","../user.user/login")
+        }else{
+            $(".if_body",parent.document.body).attr("src","../match.MatchController/getMatchList?uid=" + $.cookie('uid'))
+        }
+
+    })
+    console.log("hi 小破网站，求手下留情 ：)")
+    $(".center").click(function () {
+        $(".matchList").removeClass("active")
+        $(".questionList").removeClass("active")
+        $(".admin").removeClass("active")
+        $(this).addClass("active")
+        // 登录判断
+        if($.cookie('isLogin') == "true"){
+            $(".if_body",parent.document.body).attr("src","../user.user/PersonInfo?uid=" + $.cookie('uid'))
+        }else{
+            $(".if_body",parent.document.body).attr("src","../user.user/login")
+        }
+    })
+    $(".admin").click(function () {
+        $(".matchList").removeClass("active")
+        $(".questionList").removeClass("active")
+        $(".center").removeClass("active")
+        $(this).addClass("active")
+        $(".if_body",parent.document.body).attr("src","../admin.adminController/toAdminMenu")
+    })
+</script>
+<!-- 选项 2：Popper 和 Bootstrap 的 JS 插件各自独立 -->
+<!--
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js" integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+" crossorigin="anonymous"></script>
+-->
+</body>
+
+
+</html>

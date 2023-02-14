@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <!-- 必须的 meta 标签 -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap 的 CSS 文件 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+  <title>Hello, world!</title>
+</head>
+<body>
+<div class="container-lg">
+  <div  style="margin-top: 10px">
+    {php}$index = 0; {/php}
+    {foreach $matchList as $key => $match}
+    <div class="card" style="width: 31%;margin-left: 20px;float: left;margin-top: 10px">
+      <img src="{$match.img_url}" class="card-img-top" alt="..." width="400px" height="200px">
+      <div class="card-body" style="width: 100%;height: 240px">
+        {if($match.state == true)}
+        <span style="float:left;margin-right: 5px" class="badge badge-success" >已开始</span>
+        {else /}
+        <span style="float:left;margin-right: 5px" class="badge badge-warning" >未开始</span>
+        {/if}
+        <br>
+        <h5 class="card-title" >
+          {$match.match_name}
+        </h5>
+
+        <p class="card-text">{$match.match_description}</p>
+      </div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">参加人数: {$match.participation_count}</li>
+        <li class="list-group-item">开始时间: {$match.start_time}</li>
+        <li class="list-group-item">创建时间: {$match.creat_time}</li>
+      </ul>
+      <div class="card-body">
+
+        <?php $href = "../match.matchController/matchDetail?mid=" . $match->mid . "&uid=" . $uid; ?>
+        <a href="{$href}" class="card-link ">查看详情</a>
+
+        {if($participateList[$index] == true)}
+          <a href="" class="card-link btn-danger" style="border-radius: 15px" disabled="true">已报名</a>
+        {else \}
+          <?php $participate = "../match.matchController/participateMatch?mid=" . $match->mid . "&uid=" . $uid; ?>
+          <a href="{$participate}" class="card-link">快速报名</a>
+        {/if}
+
+        {php}$index++;{/php}
+
+      </div>
+    </div>
+    {/foreach}
+
+
+  </div>
+</div>
+
+<script>
+
+</script>
+
+</body>
+
+
+</html>

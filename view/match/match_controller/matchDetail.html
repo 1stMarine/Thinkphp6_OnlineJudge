@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap 的 CSS 文件 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <!--    https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css-->
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <title>Hello, world!</title>
+</head>
+<body>
+<div class="container-lg">
+    <div class="card">
+        <div class="card-body" style="height: 1000px">
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <h1 style="float:left">{$match.match_name}</h1>
+                        {if($match.state == true)}
+                        <span style="float:left" class="badge badge-success" >已开始</span>
+                        {else /}
+                        <span style="float:left" class="badge badge-warning" >未开始</span>
+                        {/if}
+                        {if($state == false)}
+                            <button type="button" style="float: right;width: 100px;height: 50px" class="btn btn-primary">报名</button>
+                        {else /}
+                            <button type="button" style="float: right;width: 100px;height: 50px" class="btn btn-primary disabled">已报名</button>
+                        {/if}
+                    </div>
+                    <div style="clear:both"></div>
+                    <span>参与人数:{$match.participation_count}   ,比赛时间 : {$match.start_time} 开始， 持续 {$match.persistent_time} 分钟</span>
+                    <div>
+                        <ul class="nav nav-tabs card-header-tabs">
+                            <li class="nav-item">
+                                <a class="nav-link active to_detail" >详情</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link to_question_list" >题目</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-body">
+
+                    <div class="detial">
+                        <h4>赛事介绍</h4>
+                        <p>{$match.match_description}</p>
+                        <h4>赛事形式</h4>
+                        <p>{$match.match_type}</p>
+                    </div>
+
+                    <div class="question_list" hidden>
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">题目</th>
+                                <th scope="col">通过率</th>
+                                <th scope="col">难度</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {assign name="index" value="0" /}
+                            {foreach $questionList as $key=>$question}
+                            <tr class="question">
+                                <th scope="row">{$index+=1}</th>
+                                <?php $href = "../editor?qid=" . $question->qid; ?>
+                                <td><a href={$href}>{$question.question_name}</a></td>
+                                <td>{$question.total_attemp_count == 0 ? 0 : $question.total_pass_count / $question.total_attemp_count}%</td>
+                                <td>
+                                    {switch $question.difficulty}
+                                    {case 0}<span class="badge badge-success">简单</span>{/case}
+                                    {case 1}<span class="badge badge-success">中等</span>{/case}
+                                    {case 2}<span class="badge badge-success">困难</span>{/case}
+                                    {/switch}
+                                </td>
+                            </tr>
+                            {/foreach}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(".to_question_list").click(function () {
+        $(".to_question_list").addClass("active")
+        $(".to_detail").removeClass("active")
+
+        $(".detial").attr("hidden",true)
+        $(".question_list").attr("hidden",false)
+    })
+
+    $(".to_detail").click(function () {
+        $(".to_detail").addClass("active")
+        $(".to_question_list").removeClass("active")
+
+        $(".detial").attr("hidden",false)
+        $(".question_list").attr("hidden",true)
+    })
+</script>
+</body>
+</html>
