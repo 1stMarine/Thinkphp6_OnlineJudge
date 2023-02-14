@@ -4,7 +4,11 @@ namespace app\controller\admin;
 
 use app\controller\match\MatchModel;
 use app\controller\match\MatchQuestionModel;
+use app\controller\question\Model\MeddleRecordUser;
+use app\controller\question\Model\RecordModel;
+use app\controller\question\Model\SolveQuestion;
 use app\controller\question\Question;
+use app\controller\question\TestSampleModel;
 use app\Request;
 use think\facade\View;
 
@@ -46,11 +50,33 @@ class adminController
     }
 
     public function deleteQuestion(Request $request){
-        $qeustion = Question::find($request->param("qid"));
+        $qid = $request->param("qid");
+
+        $matchQuestionModel = new MatchQuestionModel();
+        $matchQuestion = $matchQuestionModel->where("qid", $qid)->select();
+        foreach ($matchQuestion as $key => $match)
+            $match->delete();
+
+        $solveQuestion = new SolveQuestion();
+        $solveQuestions = $solveQuestion->where("qid", $qid)->select();
+        foreach ($solveQuestions as $key => $solve)
+            $solve->delete();
+
+
+
+
+        $testSampleModel = new TestSampleModel();
+        $testSamples = $testSampleModel->where("qid", $qid)->select();
+        foreach ($testSamples as $key => $testSample)
+            $testSample->delete();
+
+
+        $qeustion = Question::find($qid);
         $qeustion->delete();
     }
 
     public function deleteMatch(Request $request){
+
         $mid = $request->param("mid");
         $match = MatchModel::find($mid);
         $match->delete();

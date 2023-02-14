@@ -109,6 +109,26 @@ class MainJudgeBody
 //      编译
     public function compile(){
         exec($this->compileCommand,$compileResult);
+        if($compileResult[0] != null){
+            $resultInfo = new ResultInfo(
+                $this->testInfo->code,
+                date("Y-m-d H:i",$this->testInfo->submitTime),
+                $this->testInfo->language
+            );
+
+            $resultInfo->setCode(40005);
+            $resultInfo->setTime(0);
+            $resultInfo->setSpace(0);
+            $resultInfo->setMessage("编译失败");
+            $resultInfo->setInputOutput($compileResult);
+            $this->deleteContainer();
+            return new returnMessage(
+                40005,
+                "编译失败",
+                $resultInfo
+            );
+        }
+        return null;
     }
 
 //      运行

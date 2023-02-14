@@ -71,6 +71,7 @@
 
                 <dt class="col-sm-3">样例输出</dt>
                 <dd class="col-sm-9">
+                    {if()}
                     {foreach $question.output_sample as $key => $output}
                         <textarea class="form-control" id="exampleFormControlTextarea2" rows="2" disabled>{$output}</textarea>
                     {/foreach}
@@ -121,11 +122,19 @@
 
     <div style="width: 100%;height:80px;">
         <div style="width: 70%;float: left;height:80px;">
+            {if($state == false)}
+            <button class="btn btn-danger disabled" type="button" style="float: right;width: 100px;margin-left: 10px">
+                <span class="spinner-grow spinner-grow-sm loading_circle" role="status" aria-hidden="true" hidden></span>
+                <span class="btn_text">比赛结束</span>
+            </button>
 
+            {else /}
             <button class="btn btn-primary submit_code" type="button" style="float: right;width: 100px;margin-left: 10px">
                 <span class="spinner-grow spinner-grow-sm loading_circle" role="status" aria-hidden="true" hidden></span>
                 <span class="btn_text">提 &nbsp;&nbsp;交</span>
             </button>
+            {/if}
+
 
             <div class="alert alert-dark result" role="alert" style="float: right;width: 70%">
                 未运行程序
@@ -194,10 +203,11 @@
 
 
 </div>
+<div class="isMatch" hidden>{$isMatch}</div>
+<div class="mid" hidden>{$mid}</div>
 <div class="qid" hidden>{$question.qid}</div>
 <div class="difficulty" hidden>{$question.difficulty}</div>
 <script>
-
 
     require('ace/ext/old_ie')
     ace.require("ace/ext/language_tools")
@@ -222,23 +232,29 @@
         editor.setTheme("ace/theme/"+$(this).val());
     })
     $(".submit_code").click(function () {
+        $(".result").addClass("alert-dark")
         if($.cookie("isLogin") == "false"){
             $(".if_body",parent.document.body).attr("src","../user.user/login")
             return
         }
+        data = {
+            "qid": $qid,
+            "language": "c_cpp",
+            "code": editor.getValue(),
+            "uid": $.cookie("uid"),
+            "difficulty": difficulty,
+            "isMatch":$(".isMatch").text() === "1",
+            "mid":$(".isMatch").text() === "1" ? $(".mid").text() : null
+        }
+
 
         $(".btn_text").text("提交中")
         $(".submit_code").attr("disabled",true)
         $(".loading_circle").attr("hidden",false)
         $.post(
             "../judge_machine.CreateJudge/judge",
-            {
-                "qid": $qid,
-                "language":"c_cpp",
-                "code":editor.getValue(),
-                "uid":$.cookie("uid"),
-                "difficulty":difficulty
-            },
+            data
+            ,
             function (data,status) {
                 $(".btn_text").text("提   交")
                 $(".submit_code").attr("disabled",false)
@@ -251,8 +267,16 @@
                     $(".result").addClass("alert-danger")
                 }
 
-                $(".result").text(data.obj.message + " 运行时间 : " + (data.obj.time / 1000) + "s 消耗内存 :" + (data.obj.space / 1024).toFixed(2) + " Mb")
-
+                if (data.code === 40005) {
+                    // var errorMsg = "";
+                    // for (msg of data.obj.inputOutput) {
+                    //     errorMsg += msg
+                    //     errorMsg += "\n"
+                    // }
+                    $(".result").text(data.obj.message + " : "+ data.obj.inputOutput);
+                } else {
+                    $(".result").text(data.obj.message + " 运行时间 : " + (data.obj.time / 1000) + "s 消耗内存 :" + (data.obj.space / 1024).toFixed(2) + " Mb")
+                }
             }
         )
     })

@@ -3,6 +3,7 @@
 namespace app\controller\judge_machine;
 
 use app\common\SnowFlake;
+use app\controller\common\matchCache;
 use app\controller\question\Model\MeddleRecordUser;
 use app\controller\question\Model\RecordModel;
 use app\controller\question\Model\SolveQuestion;
@@ -78,9 +79,16 @@ class CreateJudge
 //          新建判题机
         $this->mainJudgeBody = new MainJudgeBody($testInfo);
 //          编译
-        $this->mainJudgeBody->compile();
+        $resultInfo = null;
+        $compileResult = $this->mainJudgeBody->compile();
+
+        if($compileResult == null){
+            $resultInfo = $this->mainJudgeBody->running();
+        }else{
+            $resultInfo = $compileResult;
+        }
 //          运行
-        $resultInfo = $this->mainJudgeBody->running();
+
 //          计算通过率
         $this->passRate($resultInfo->code,$request->param("qid"),$request->param("uid"),$request->param("difficulty"));
 //          编译记录
@@ -102,6 +110,18 @@ class CreateJudge
 
         $meddleRecordUser = new MeddleRecordUser();
         $meddleRecordUser->save(["rid" => $rid,"uid" => $request->param("uid")]);
+
+//        如果是竞赛中，存一份到缓存中
+        if($request->param("isMatch")){
+            matchCache::setMatchInfo(
+                $resultInfo,
+                $request->param("code"),
+                $request->param("mid"),
+                $request->param("uid"),
+                $request->param("qid")
+            );
+        }
+
         return json($resultInfo);
     }
 

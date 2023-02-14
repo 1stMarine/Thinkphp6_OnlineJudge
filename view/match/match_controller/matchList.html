@@ -18,10 +18,12 @@
     <div class="card" style="width: 31%;margin-left: 20px;float: left;margin-top: 10px">
       <img src="{$match.img_url}" class="card-img-top" alt="..." width="400px" height="200px">
       <div class="card-body" style="width: 100%;height: 240px">
-        {if($match.state == true)}
+        {if($match.state == 1)}
         <span style="float:left;margin-right: 5px" class="badge badge-success" >已开始</span>
-        {else /}
+        {elseif $match.state == 0/}
         <span style="float:left;margin-right: 5px" class="badge badge-warning" >未开始</span>
+        {else /}
+        <span style="float:left;margin-right: 5px" class="badge badge-danger" >已结束</span>
         {/if}
         <br>
         <h5 class="card-title" >
@@ -40,11 +42,15 @@
         <?php $href = "../match.matchController/matchDetail?mid=" . $match->mid . "&uid=" . $uid; ?>
         <a href="{$href}" class="card-link ">查看详情</a>
 
-        {if($participateList[$index] == true)}
-          <a href="" class="card-link btn-danger" style="border-radius: 15px" disabled="true">已报名</a>
+        {if($match.state != 0)}
+          <a href="" class="card-link btn-danger" style="border-radius: 15px" disabled="true">结束报名</a>
         {else \}
+          {if($participateList[$index] == true)}
+          <a href="" class="card-link btn-warning" style="border-radius: 15px" disabled="true">已报名</a>
+          {else \}
           <?php $participate = "../match.matchController/participateMatch?mid=" . $match->mid . "&uid=" . $uid; ?>
           <a href="{$participate}" class="card-link">快速报名</a>
+          {/if}
         {/if}
 
         {php}$index++;{/php}
